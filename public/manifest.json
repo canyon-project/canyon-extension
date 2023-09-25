@@ -1,6 +1,6 @@
 {
   "name": "Canyon Extension",
-  "version": "1.0.65",
+  "version": "1.0.1",
   "manifest_version": 3,
   "description": "Canyon manual report plugin",
   "icons": {
