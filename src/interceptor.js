@@ -261,7 +261,7 @@ window.canyon__cxtension__onclickReport = function () {
         }
         fetch(`${getFullDomainName(window.__canyon__.dsn)}/coverage/triggeragg`,{
             method: 'POST',
-            data: {"reportId":reportId},
+            body: JSON.stringify({"reportId":reportId}),
             headers:{
                 'Content-Type':'application/json',
             }
