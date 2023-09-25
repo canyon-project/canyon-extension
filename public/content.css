@@ -1,0 +1,42 @@
+#canyon-extension{
+    border: 1px solid #eee;
+    padding: 10px;
+    position: fixed;
+    right: 10px;
+    top: 10px;
+    background: #fff;
+    border-radius: 5px;
+}
+#canyon-extension .x{
+    position: absolute;
+    right: 0;
+    top: 0;
+    cursor:pointer;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#canyon-extension .row{
+    display: flex;
+}
+#canyon-extension .row>div:nth-child(1){
+    margin-right: 10px;
+}
+
+#canyon-extension .border{
+    border-top: 1px solid #eee;
+    margin: 10px 0;
+}
+#canyon-extension .operate{
+    padding-top: 10px;
+}
+#canyon-extension .wrap{
+    min-width: 520px;
+}
+
+#canyon-extension .report-result,#canyon-extension .agg-result{
+    width: 420px;
+    word-break: break-all;
+}
