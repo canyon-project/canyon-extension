@@ -1,0 +1,45 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - run: pnpm i
+      - run: pnpm run build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Build
+          path: dist
+
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    needs: build
+
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: Build
+          path: dist
+      - run: mv dist build
+      - run: zip -r canyon-extension.zip build/
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "canyon-extension.zip"
