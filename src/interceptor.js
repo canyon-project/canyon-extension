@@ -226,7 +226,7 @@ window.canyon__cxtension__down__coverage__ = function () {
 }
 
 function canyon__cxtension__initCanyonData() {
-    document.querySelector('#canyon-extension .repoID').innerHTML = window.__canyon__.repoId
+    document.querySelector('#canyon-extension .projectID').innerHTML = window.__canyon__.projectID
     document.querySelector('#canyon-extension .commitsha').innerHTML = window.__canyon__.commitSha
     document.querySelector('#canyon-extension .dsn').innerHTML = window.__canyon__.dsn
     document.querySelector('#canyon-extension .coverage').innerHTML = Object.keys(window.__coverage__).length
@@ -284,8 +284,8 @@ setTimeout(() => {
     <div class="x" onclick="canyon__cxtension__onclickX()">c</div>
     <div class="wrap" style="display: none">
         <div class="row">
-            <div>Repo ID:</div>
-            <div class="repoID"></div>
+            <div>Project ID:</div>
+            <div class="projectID"></div>
         </div>
         <div class="row">
             <div>Commit Sha:</div>
