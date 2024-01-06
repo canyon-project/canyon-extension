@@ -1,4 +1,4 @@
-import {CSSProperties, useState} from 'react'
+import {CSSProperties, useEffect, useState} from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -22,6 +22,7 @@ import {
     Tooltip,
     Button, Result
 } from "antd";
+import {qifei} from "./util.ts";
 // import {useToken} from "antd/es/theme/internal";
 const {Text}  =Typography
 const text = `Canyon offers a solution that involves adding a code probe during the construction of JavaScript projects and triggering the code probe upon page loading to gather code coverage data.`;
@@ -29,6 +30,14 @@ const text = `Canyon offers a solution that involves adding a code probe during 
 const {useToken} = theme
 function App() {
   const [count, setCount] = useState(0)
+    const [data,setData] = useState({
+        "commitSha": "",
+        "projectID": "",
+        "branch": "",
+        "dsn": "",
+        "reporter": "",
+        "instrumentCwd": ""
+    })
     const {token} = useToken()
     const panelStyle: React.CSSProperties = {
         marginBottom: 24,
@@ -52,6 +61,18 @@ function App() {
             style: panelStyle,
         },
     ];
+
+    useEffect(()=>{
+        qifei().then(res=>{
+            if (res){
+                setData(res)
+            }
+
+        })
+    },[])
+
+
+
   return (
       <ConfigProvider theme={{
           token: {
@@ -59,7 +80,7 @@ function App() {
           }
       }}>
 
-          <div id={'box'} style={{width: '500px', margin: '20px'}}>
+          <div id={'box'} style={{width: '500px', margin: '0'}}>
               <header className={'header'}>
                   <div style={{fontSize:'24px',display:'flex',alignItems:'center'}}>
                       <img style={{width:'36px',marginRight:'12px'}} src={logo} alt=""/>
@@ -77,7 +98,7 @@ function App() {
                           <Space>
                               <Space style={{fontSize: '14px', color: token.colorTextSecondary}}>Project
                                   ID<span>:</span></Space>
-                              <Text>999</Text>
+                              <Text>{data.projectID}</Text>
                           </Space>
                           <Space>
                               <Space style={{fontSize: '14px', color: token.colorTextSecondary}}>
@@ -103,7 +124,11 @@ function App() {
                   <div className={'row'}>
                       <span className={'title'}>Operate</span>
                       <div style={{display: 'flex'}}>
-                          <Button style={{flex: '1'}} type={'primary'}>Upload</Button>
+                          <Button style={{flex: '1'}} type={'primary'} onClick={()=>{
+                              qifei().then(res=>{
+                                  console.log(res,'1111')
+                              })
+                          }}>Upload</Button>
                           <div style={{width: '20px'}}></div>
                           <Button style={{flex: '1'}}>Reset</Button>
                       </div>
