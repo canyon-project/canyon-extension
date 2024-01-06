@@ -5,7 +5,7 @@ import './App.css'
 import logo from './assets/light-logo.svg'
 import {
     ArrowRightOutlined,
-    CaretRightOutlined, GithubOutlined,
+    CaretRightOutlined, DownloadOutlined, GithubOutlined,
     InfoCircleOutlined,
     QuestionCircleFilled, QuestionCircleOutlined,
     RightOutlined
@@ -124,6 +124,15 @@ function App() {
                               <Space style={{fontSize: '14px', color: token.colorTextSecondary}}>DSN
                                   <span>:</span></Space>
                               <Text>{data.dsn}</Text>
+                          </Space>
+
+                          <Space>
+                              <Space style={{fontSize: '14px', color: token.colorTextSecondary}}>Coverage
+                                  <span>:</span></Space>
+                              <a href="">
+                                  <Text>16</Text>
+                                  <DownloadOutlined style={{marginLeft:'8px'}}/>
+                              </a>
                           </Space>
 
 
