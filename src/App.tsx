@@ -64,8 +64,10 @@ function App() {
 
     useEffect(()=>{
         qifei().then(res=>{
+            console.log(res)
             if (res){
-                setData(res)
+
+                // setData(res)
             }
 
         })

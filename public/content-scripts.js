@@ -4,50 +4,31 @@ const e = function() {
 };
 e();
 
-let box = null
+let casualCoverageAndCanyonData = null
 
-setTimeout(()=>{
-    // window.postMessage({
-    //   test:"你好"
-    // },'*')
-    window.addEventListener('message', function (e) {
-        if (e.data.test1){
-            console.log(e.data.test1)
-            box = e.data.test1
-        }
-    })
-},1000)
+window.addEventListener('message', function (e) {
+    if (e.data.type === '__canyon__event_get_coverage_and_canyon_data_response'){
+        casualCoverageAndCanyonData = e.data.payload
+    }
+})
 
-
-
-function huoqushuju() {
+function getCoverageAndCanyonData() {
     window.postMessage({
-        test:"你好"
+        type:'__canyon__event_get_coverage_and_canyon_data_request',
+        payload:{}
     },'*')
-
-    // return box
-
     return new Promise((resolve)=>{
         setTimeout(()=>{
-            resolve(box)
-        },200)
+            resolve(casualCoverageAndCanyonData)
+        },360)
     })
 }
 
-// get popup2content info
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-
-
-    huoqushuju().then(res=>{
-        box = null
+    console.log(request)
+    getCoverageAndCanyonData().then(res=>{
+        casualCoverageAndCanyonData = null
         sendResponse(res)
     })
     return true
 })
-
-
-
-
-setInterval(()=>{
-    console.log(box,'检查box')
-},500)

@@ -5,7 +5,6 @@ export function qifei() {
             let message = { info: true };
             // 向content scripts发送消息
             chrome.tabs.sendMessage(tab.id, message, (res) => {
-                console.log(res,'sssss')
                 resolve(res)
                 return true
             });
