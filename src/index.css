@@ -10,7 +10,7 @@
     height: 72px;
     color: white;
     line-height: 72px;
-    margin-bottom: 20px;
+    /*margin-bottom: 20px;*/
     display: flex;
     justify-content: space-between;
 }

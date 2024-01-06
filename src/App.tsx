@@ -20,7 +20,7 @@ import {
     Switch,
     ConfigProvider,
     Tooltip,
-    Button, Result
+    Button, Result, Input
 } from "antd";
 import {qifei} from "./util.ts";
 // import {useToken} from "antd/es/theme/internal";
@@ -31,12 +31,12 @@ const {useToken} = theme
 function App() {
   const [count, setCount] = useState(0)
     const [data,setData] = useState({
-        "commitSha": "",
-        "projectID": "",
-        "branch": "",
-        "dsn": "",
-        "reporter": "",
-        "instrumentCwd": ""
+        "commitSha": "ac6061b6f00179f77102561cbd737c205b98c27d",
+        "projectID": "999999",
+        "branch": "rel/8.62.dev.price",
+        "dsn": "http://canyon.org.io",
+        "reporter": "tzhangm",
+        "instrumentCwd": "/Users/zhangtao/github.com/canyon-project/canyon-extension"
     })
     const {token} = useToken()
     const panelStyle: React.CSSProperties = {
@@ -56,7 +56,9 @@ function App() {
                 color:token.colorPrimary
             }}>
                 <p>{text}</p>
-                <span style={{textAlign:'right',display:'block',fontWeight:'bold'}}>Learn more<ArrowRightOutlined style={{marginLeft:'10px'}}/></span>
+                <span onClick={()=>{
+                    window.open('https://github.com/canyon-project/canyon')
+                }} style={{textAlign:'right',display:'block',fontWeight:'bold',cursor:'pointer'}}>Learn more<ArrowRightOutlined style={{marginLeft:'10px'}}/></span>
             </div>,
             style: panelStyle,
         },
@@ -84,12 +86,16 @@ function App() {
 
           <div id={'box'} style={{width: '500px', margin: '0'}}>
               <header className={'header'}>
-                  <div style={{fontSize:'24px',display:'flex',alignItems:'center'}}>
+                  <div style={{fontSize:'24px',display:'flex',alignItems:'center',cursor:'pointer'}} onClick={()=>{
+                      window.open('https://github.com/canyon-project/canyon')
+                  }}>
                       <img style={{width:'36px',marginRight:'12px'}} src={logo} alt=""/>
                       <span style={{fontWeight:'bold'}}>Canyon</span>
                   </div>
 
-                  <div>
+                  <div style={{cursor:'pointer'}} onClick={()=>{
+                      window.open('https://github.com/canyon-project/canyon')
+                  }}>
                       <GithubOutlined/>
                   </div>
               </header>
@@ -101,6 +107,35 @@ function App() {
                               <Space style={{fontSize: '14px', color: token.colorTextSecondary}}>Project
                                   ID<span>:</span></Space>
                               <Text>{data.projectID}</Text>
+                          </Space>
+                          <Space>
+                              <Space style={{fontSize: '14px', color: token.colorTextSecondary}}>Commit Sha
+                                  <span>:</span></Space>
+                              <Text>{data.commitSha}</Text>
+                          </Space>
+
+                          <Space>
+                              <Space style={{fontSize: '14px', color: token.colorTextSecondary}}>Branch
+                                  <span>:</span></Space>
+                              <Text>{data.branch}</Text>
+                          </Space>
+
+                          <Space>
+                              <Space style={{fontSize: '14px', color: token.colorTextSecondary}}>DSN
+                                  <span>:</span></Space>
+                              <Text>{data.dsn}</Text>
+                          </Space>
+
+
+
+
+                          <Space>
+                              <Space style={{fontSize: '14px', color: token.colorTextSecondary}}>Report ID
+                                  <Tooltip title={'Coverage data for the same report id can be aggregated'}>
+                                      <QuestionCircleOutlined/>
+                                  </Tooltip>
+                                  <span>:</span></Space>
+                              <Input value={''} style={{width:'320px'}} placeholder={'The default value is Commit Sha'}/>
                           </Space>
                           <Space>
                               <Space style={{fontSize: '14px', color: token.colorTextSecondary}}>
@@ -156,7 +191,7 @@ function App() {
                       </div>
                       <Divider/>
                       <div>
-                          <a href="" style={{fontSize: '12px'}}>Something wrong or missing?</a>
+                          <a href="https://github.com/canyon-project/canyon" target={'_blank'} style={{fontSize: '12px'}}>Something wrong or missing?</a>
                       </div>
                   </div>
               </div>
@@ -164,7 +199,7 @@ function App() {
 
                   <Collapse
                       bordered={false}
-                      defaultActiveKey={['1']}
+                      defaultActiveKey={[]}
                       expandIcon={({isActive}) => <CaretRightOutlined style={{
                           color: token.colorPrimary
                       }} rotate={isActive ? 90 : 0}/>}
