@@ -1,15 +1,17 @@
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { DownloadOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import { useRequest } from 'ahooks';
 import { Alert, Button, Input, Modal, Space, Spin, Tag, Tooltip } from 'antd';
 import { useMemo, useState } from 'react';
 
-import { getCoverageAndCanyonData, upload } from '../../helper.ts';
+import { downJson, getCoverageAndCanyonData, upload } from '../../helper.ts';
 import AppDataLayout from './data/layout.tsx';
 import AppResult from './result.tsx';
 import AppRow from './row.tsx';
+
 const AppMain = () => {
   const [coverages, setCoverages] = useState<any>([]);
+  const [reportID, setReportID] = useState('');
   const {
     data: uploadData,
     loading: uploadLoading,
@@ -18,7 +20,10 @@ const AppMain = () => {
   } = useRequest(
     () =>
       upload({
-        canyon,
+        canyon: {
+          ...canyon,
+          reportID: reportID || undefined,
+        },
         coverage,
       }),
     {
@@ -89,7 +94,18 @@ const AppMain = () => {
               label={'Coverage'}
               value={
                 <div>
-                  <a>{Object.keys(coverage).length}</a>{' '}
+                  <a
+                    onClick={() => {
+                      downJson(JSON.stringify(coverage), canyon.projectID + '-' + canyon.commitSha);
+                    }}
+                  >
+                    {Object.keys(coverage).length}
+                    <DownloadOutlined
+                      css={css`
+                        margin-left: 8px;
+                      `}
+                    />
+                  </a>{' '}
                   {isnew && coverages[0] ? (
                     <Tooltip title={'has new'}>
                       <Tag
@@ -117,7 +133,10 @@ const AppMain = () => {
               }
               value={
                 <Input
-                  value={''}
+                  value={reportID}
+                  onChange={(e) => {
+                    setReportID(e.target.value);
+                  }}
                   style={{ width: '320px' }}
                   placeholder={'The default value is Commit Sha'}
                 />

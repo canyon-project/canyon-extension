@@ -11,6 +11,7 @@ const AppRowStyle = styled.div`
     font-weight: bold;
     display: block;
     margin-bottom: 16px;
+    font-size: 16px;
   }
   .title::before {
     content: '';
