@@ -39,7 +39,7 @@ jobs:
           name: Build
           path: dist
       - run: mv dist build
-      - run: zip -r dist build/
+      - run: zip -r canyon-extension.zip build/
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "canyon-extension.zip"
