@@ -22,7 +22,7 @@ export function getCoverageAndCanyonData(): Promise<any> {
       } else {
         resolve({
           canyon: {
-            "projectID": "86927",
+            projectID: '86927',
             commitSha: '8eedc8908c96ae994f4643a512ad723179a271a8',
             branch: 'main',
             dsn: 'http://canyon.com/coverage/client',
@@ -75,4 +75,33 @@ export function downJson(content: string, filename: string) {
   document.body.appendChild(eleLink);
   eleLink.click();
   document.body.removeChild(eleLink);
+}
+
+function getCheckUserUrl(url: string) {
+  try {
+    return url.split('/coverage/client')[0] + '/api/user';
+  } catch (e) {
+    return url;
+  }
+}
+
+export async function checkUser({ canyon }: any) {
+  return fetch(getCheckUserUrl(canyon.dsn), {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${canyon.reporter}`,
+    },
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      if (res.statusCode > 300) {
+        return JSON.stringify(res);
+      } else {
+        return res;
+      }
+    })
+    .catch((err) => {
+      return err;
+    });
 }

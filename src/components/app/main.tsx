@@ -1,10 +1,15 @@
-import { DownloadOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import {
+  CheckOutlined,
+  CloseOutlined,
+  DownloadOutlined,
+  QuestionCircleOutlined,
+} from '@ant-design/icons';
 import { css } from '@emotion/react';
 import { useRequest } from 'ahooks';
 import { Alert, Button, Input, Modal, Space, Spin, Tag, Tooltip } from 'antd';
 import { useMemo, useState } from 'react';
 
-import { downJson, getCoverageAndCanyonData, upload } from '../../helper.ts';
+import { checkUser, downJson, getCoverageAndCanyonData, upload } from '../../helper.ts';
 import AppDataLayout from './data/layout.tsx';
 import AppResult from './result.tsx';
 import AppRow from './row.tsx';
@@ -12,6 +17,7 @@ import AppRow from './row.tsx';
 const AppMain = () => {
   const [coverages, setCoverages] = useState<any>([]);
   const [reportID, setReportID] = useState('');
+  const [reporter, setReporter] = useState(localStorage.getItem('reporter') || '');
   const {
     data: uploadData,
     loading: uploadLoading,
@@ -23,6 +29,7 @@ const AppMain = () => {
         canyon: {
           ...canyon,
           reportID: reportID || undefined,
+          reporter: reporter || canyon.reporter || undefined,
         },
         coverage,
       }),
@@ -59,6 +66,20 @@ const AppMain = () => {
       },
     },
   );
+  const { data: checkUserData } = useRequest(
+    () =>
+      checkUser({
+        canyon: {
+          ...canyon,
+          reportID: reportID || undefined,
+          reporter: reporter || canyon.reporter || undefined,
+        },
+      }),
+    {
+      refreshDeps: [canyon.reporter, canyon.dsn, reporter],
+    },
+  );
+
   const isnew = useMemo(() => {
     return JSON.stringify(coverages[0]) !== JSON.stringify(coverages[1]);
   }, [coverages]);
@@ -140,6 +161,32 @@ const AppMain = () => {
                   style={{ width: '320px' }}
                   placeholder={'The default value is Commit Sha'}
                 />
+              }
+            />
+
+            <AppDataLayout
+              label={<>Reporter</>}
+              value={
+                <Space>
+                  <Input
+                    value={reporter}
+                    onChange={(e) => {
+                      setReporter(e.target.value);
+                      localStorage.setItem('reporter', e.target.value)
+                    }}
+                    style={{ width: '220px' }}
+                    placeholder={'Reporter'}
+                  />
+
+                  <span>{checkUserData?.email}</span>
+                  {checkUserData?.email ? (
+                    <CheckOutlined style={{ color: '#52c41a' }} />
+                  ) : (
+                    <Tooltip title={'Invalid Token'}>
+                      <CloseOutlined style={{ color: 'red', cursor: 'pointer' }} />
+                    </Tooltip>
+                  )}
+                </Space>
               }
             />
           </Space>
