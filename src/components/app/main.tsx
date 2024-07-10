@@ -154,6 +154,7 @@ const AppMain = () => {
               }
               value={
                 <Input
+                  maxLength={64}
                   value={reportID}
                   onChange={(e) => {
                     setReportID(e.target.value);
