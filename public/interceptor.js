@@ -26,22 +26,26 @@ window.addEventListener('message', function (e) {
 
 if (!isNaN(Number(localStorage.getItem('__canyon__interval__time__')))) {
   const num = Number(localStorage.getItem('__canyon__interval__time__'));
-  if (num > 0 && window.__canyon__ && window.__coverage__) {
+  if (num > 0) {
     setInterval(() => {
-      fetch(window.__canyon__.dsn, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${window.__canyon__.reporter}`,
-        },
-        body: JSON.stringify({
-          coverage: window.__coverage__,
-          ...window.__canyon__,
-          reportID: localStorage.getItem('__canyon__report__id__') || undefined,
-        }),
-      }).then(() => {
-        console.log('report coverage success');
-      });
+      if (window.__canyon__ && window.__coverage__) {
+        fetch(window.__canyon__.dsn, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${window.__canyon__.reporter}`,
+          },
+          body: JSON.stringify({
+            coverage: window.__coverage__,
+            ...window.__canyon__,
+            reportID: localStorage.getItem('__canyon__report__id__') || undefined,
+          }),
+        }).then(() => {
+          console.log('report coverage success');
+        });
+      } else {
+        console.log('coverage or canyon data is not ready');
+      }
     }, num * 1000);
   }
 }

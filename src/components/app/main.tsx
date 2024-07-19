@@ -161,22 +161,25 @@ const AppMain = () => {
                 </>
               }
               value={
-                <InputNumber
-                  max={60}
-                  min={0}
-                  value={intervalTime}
-                  onChange={(e) => {
-                    setIntervalTime(e || 0);
-                  }}
-                  onBlur={() => {
-                    run({
-                      _intervalTime: intervalTime,
-                      _reportID: undefined,
-                    });
-                  }}
-                  style={{ width: '285px' }}
-                  placeholder={'The interval time range is 0-60'}
-                />
+                <Space>
+                  <InputNumber
+                    max={60}
+                    min={0}
+                    value={intervalTime}
+                    onChange={(e) => {
+                      setIntervalTime(e || 0);
+                    }}
+                    onBlur={() => {
+                      run({
+                        _intervalTime: intervalTime,
+                        _reportID: undefined,
+                      });
+                    }}
+                    style={{ width: '265px' }}
+                    placeholder={'The interval time range is 0-60'}
+                  />
+                  <span>s</span>
+                </Space>
               }
             />
             <AppDataLayout
