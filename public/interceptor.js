@@ -1,10 +1,21 @@
 window.addEventListener('message', function (e) {
   if (e.data.type === '__canyon__event_get_coverage_and_canyon_data_request') {
+    // 新增逻辑，获取覆盖率数据的时候还可以set reportID，key定为__canyon__report__id__
+    if (e.data.payload?.reportID !== undefined) {
+      localStorage.setItem('__canyon__report__id__', e.data.payload.reportID);
+    }
+    if (e.data.payload?.intervalTime !== undefined) {
+      localStorage.setItem('__canyon__interval__time__', e.data.payload.intervalTime);
+    }
     window.postMessage(
       {
         type: '__canyon__event_get_coverage_and_canyon_data_response',
         payload: {
-          canyon: window.__canyon__,
+          canyon: {
+            ...window.__canyon__,
+            reportID: localStorage.getItem('__canyon__report__id__') || undefined,
+            intervalTime: localStorage.getItem('__canyon__interval__time__') || undefined,
+          },
           coverage: window.__coverage__,
         },
       },
@@ -12,3 +23,25 @@ window.addEventListener('message', function (e) {
     );
   }
 });
+
+if (!isNaN(Number(localStorage.getItem('__canyon__interval__time__')))) {
+  const num = Number(localStorage.getItem('__canyon__interval__time__'));
+  if (num > 0 && window.__canyon__ && window.__coverage__) {
+    setInterval(() => {
+      fetch(window.__canyon__.dsn, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${window.__canyon__.reporter}`,
+        },
+        body: JSON.stringify({
+          coverage: window.__coverage__,
+          ...window.__canyon__,
+          reportID: localStorage.getItem('__canyon__report__id__') || undefined,
+        }),
+      }).then(() => {
+        console.log('report coverage success');
+      });
+    }, num * 1000);
+  }
+}

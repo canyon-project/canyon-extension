@@ -6,7 +6,7 @@ import {
 } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import { useRequest } from 'ahooks';
-import { Alert, Button, Input, Modal, Space, Spin, Tag, Tooltip } from 'antd';
+import { Alert, Button, Input, InputNumber, Modal, Space, Spin, Tag, Tooltip } from 'antd';
 import { useMemo, useState } from 'react';
 
 import { checkUser, downJson, getCoverageAndCanyonData, upload } from '../../helper.ts';
@@ -17,7 +17,8 @@ import AppRow from './row.tsx';
 const AppMain = () => {
   const [coverages, setCoverages] = useState<any>([]);
   const [reportID, setReportID] = useState('');
-  const [reporter, setReporter] = useState(localStorage.getItem('reporter') || '');
+  const [reporter, setReporter] = useState('');
+  const [intervalTime, setIntervalTime] = useState(0);
   const {
     data: uploadData,
     loading: uploadLoading,
@@ -47,19 +48,26 @@ const AppMain = () => {
         dsn: '-',
         reporter: '-',
         instrumentCwd: '-',
+        buildID: '-',
+        buildProvider: '-',
       },
       coverage: {},
     },
     loading,
     refresh,
+    run,
     error: error,
   } = useRequest(
-    () => {
-      return getCoverageAndCanyonData();
+    ({ _reportID, _intervalTime } = { _reportID: undefined, __intervalTime: undefined }) => {
+      return getCoverageAndCanyonData(_reportID, _intervalTime);
     },
     {
       onSuccess(res: any) {
         setCoverages([coverages.length > 0 ? coverages[1] : null, res.coverage]);
+        setReportID(res.canyon.reportID);
+        if (res.canyon.intervalTime) {
+          setIntervalTime(Number(res.canyon.intervalTime));
+        }
       },
       onError(err) {
         errorAlert(err);
@@ -146,6 +154,34 @@ const AppMain = () => {
             <AppDataLayout
               label={
                 <>
+                  Interval Report
+                  <Tooltip title={'Set interval time to report at intervals, 0 is closed.'}>
+                    <QuestionCircleOutlined />
+                  </Tooltip>
+                </>
+              }
+              value={
+                <InputNumber
+                  max={60}
+                  min={0}
+                  value={intervalTime}
+                  onChange={(e) => {
+                    setIntervalTime(e || 0);
+                  }}
+                  onBlur={() => {
+                    run({
+                      _intervalTime: intervalTime,
+                      _reportID: undefined,
+                    });
+                  }}
+                  style={{ width: '285px' }}
+                  placeholder={'The interval time range is 0-60'}
+                />
+              }
+            />
+            <AppDataLayout
+              label={
+                <>
                   Report ID
                   <Tooltip title={'Coverage data for the same report id can be aggregated'}>
                     <QuestionCircleOutlined />
@@ -158,6 +194,12 @@ const AppMain = () => {
                   value={reportID}
                   onChange={(e) => {
                     setReportID(e.target.value);
+                  }}
+                  onBlur={() => {
+                    run({
+                      _intervalTime: undefined,
+                      _reportID: reportID,
+                    });
                   }}
                   style={{ width: '320px' }}
                   placeholder={'The default value is Commit Sha'}
@@ -173,7 +215,6 @@ const AppMain = () => {
                     value={reporter}
                     onChange={(e) => {
                       setReporter(e.target.value);
-                      localStorage.setItem('reporter', e.target.value)
                     }}
                     style={{ width: '220px' }}
                     placeholder={'Reporter'}

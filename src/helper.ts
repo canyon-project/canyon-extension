@@ -1,11 +1,17 @@
 import { mockCoverage } from './mockCoverage.ts';
 
-export function getCoverageAndCanyonData(): Promise<any> {
+export function getCoverageAndCanyonData(reportID: any, intervalTime: any): Promise<any> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (chrome?.tabs?.query) {
         chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-          const message = { type: '__canyon__' };
+          const message = {
+            type: '__canyon__',
+            payload: {
+              reportID: reportID,
+              intervalTime: intervalTime,
+            },
+          };
           if (tab.id) {
             chrome.tabs.sendMessage(tab.id, message, (res) => {
               if (res.coverage === undefined) {

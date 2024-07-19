@@ -16,11 +16,14 @@ window.addEventListener('message', function (e) {
   }
 });
 
-function getCoverageAndCanyonData() {
+function getCoverageAndCanyonData(reportID, intervalTime) {
   window.postMessage(
     {
       type: '__canyon__event_get_coverage_and_canyon_data_request',
-      payload: {},
+      payload: {
+        reportID,
+        intervalTime,
+      },
     },
     '*',
   );
@@ -34,10 +37,12 @@ function getCoverageAndCanyonData() {
 // eslint-disable-next-line no-undef
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === '__canyon__') {
-    getCoverageAndCanyonData().then((res) => {
-      casualCoverageAndCanyonData = null;
-      sendResponse(res);
-    });
+    getCoverageAndCanyonData(request?.payload?.reportID, request?.payload?.intervalTime).then(
+      (res) => {
+        casualCoverageAndCanyonData = null;
+        sendResponse(res);
+      },
+    );
     return true;
   }
 });
