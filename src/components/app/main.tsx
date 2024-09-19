@@ -58,13 +58,16 @@ const AppMain = () => {
     run,
     error: error,
   } = useRequest(
-    ({ _reportID, _intervalTime } = { _reportID: undefined, __intervalTime: undefined }) => {
-      return getCoverageAndCanyonData(_reportID, _intervalTime);
+    (
+      { _reportID, _intervalTime, _reporter } = { _reportID: undefined, __intervalTime: undefined },
+    ) => {
+      return getCoverageAndCanyonData(_reportID, _intervalTime, _reporter);
     },
     {
       onSuccess(res: any) {
         setCoverages([coverages.length > 0 ? coverages[1] : null, res.coverage]);
         setReportID(res.canyon.reportID);
+        setReporter(res.canyon.reporter);
         if (res.canyon.intervalTime) {
           setIntervalTime(Number(res.canyon.intervalTime));
         }
@@ -173,6 +176,7 @@ const AppMain = () => {
                       run({
                         _intervalTime: intervalTime,
                         _reportID: undefined,
+                        _reporter: undefined,
                       });
                     }}
                     style={{ width: '265px' }}
@@ -202,6 +206,7 @@ const AppMain = () => {
                     run({
                       _intervalTime: undefined,
                       _reportID: reportID,
+                      _reporter: undefined,
                     });
                   }}
                   style={{ width: '320px' }}
@@ -221,6 +226,13 @@ const AppMain = () => {
                     }}
                     style={{ width: '220px' }}
                     placeholder={'Reporter'}
+                    onBlur={() => {
+                      run({
+                        _intervalTime: undefined,
+                        _reportID: undefined,
+                        _reporter: reporter,
+                      });
+                    }}
                   />
 
                   <span>{checkUserData?.email}</span>

@@ -1,6 +1,10 @@
 import { mockCoverage } from './mockCoverage.ts';
 
-export function getCoverageAndCanyonData(reportID: any, intervalTime: any): Promise<any> {
+export function getCoverageAndCanyonData(
+  reportID: any,
+  intervalTime: any,
+  reporter: any,
+): Promise<any> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (chrome?.tabs?.query) {
@@ -10,6 +14,7 @@ export function getCoverageAndCanyonData(reportID: any, intervalTime: any): Prom
             payload: {
               reportID: reportID,
               intervalTime: intervalTime,
+              reporter: reporter,
             },
           };
           if (tab.id) {

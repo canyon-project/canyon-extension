@@ -7,6 +7,9 @@ window.addEventListener('message', function (e) {
     if (e.data.payload?.intervalTime !== undefined) {
       localStorage.setItem('__canyon__interval__time__', e.data.payload.intervalTime);
     }
+    if (e.data.payload?.reporter !== undefined) {
+      localStorage.setItem('__canyon__reporter__', e.data.payload.reporter);
+    }
     window.postMessage(
       {
         type: '__canyon__event_get_coverage_and_canyon_data_response',
@@ -15,6 +18,7 @@ window.addEventListener('message', function (e) {
             ...window.__canyon__,
             reportID: localStorage.getItem('__canyon__report__id__') || undefined,
             intervalTime: localStorage.getItem('__canyon__interval__time__') || undefined,
+            reporter: localStorage.getItem('__canyon__reporter__') || window.__canyon__.reporter,
           },
           coverage: window.__coverage__,
         },
